@@ -1,4 +1,4 @@
-"""Moduł do obsługi gotowych prognoz cenowych."""
+"""Moduł do obsługi gotowych prognoz cenowych"""
 
 import os
 import joblib
@@ -6,7 +6,7 @@ import pandas as pd
 
 
 class PricePredictor:
-    """Klasa ładująca model i wykonująca prognozy cen mieszkań."""
+    """Klasa ładująca model i wykonująca prognozy cen mieszkań"""
 
     def __init__(self, model_name: str = "housing_model.joblib"):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +23,7 @@ class PricePredictor:
     def predict_price(
         self, size: float, rooms: int, distance: float, year: int
     ) -> float:
-        """Przyjmuje parametry mieszkania i zwraca prognozowaną cenę."""
+        """Przyjmuje parametry mieszkania i zwraca prognozowaną cenę"""
         input_data = pd.DataFrame(
             [[size, rooms, distance, year]],
             columns=["size", "rooms", "distance_to_center", "year_built"],

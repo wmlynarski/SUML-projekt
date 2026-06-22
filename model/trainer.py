@@ -1,33 +1,27 @@
-"""Moduł do trenowania modelu Machine Learning."""
+"""Moduł do trenowania modelu Machine Learning"""
 
 import os
 import joblib
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression  # <-- ZMIENIONY IMPORT
 from data.data_processor import DataProcessor
 
-
 def train_and_save_model():
-    """Trenuje model Random Forest i zapisuje go do pliku."""
-    # Pobieramy ścieżkę do katalogu głównego projektu
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    output_dir = os.path.join(base_dir, "saved_models")
-    
-    # Automatyczne tworzenie folderu na model, jeśli nie istnieje
+    """Trenuje model Regresji Liniowej i zapisuje go do pliku."""
+    output_dir = os.path.join(os.getcwd(), "saved_models")
     os.makedirs(output_dir, exist_ok=True)
 
-    # Inicjalizacja procesora (sam znajdzie apartments.csv)
     processor = DataProcessor()
     x_train, _, y_train, _ = processor.load_and_split_data()
 
-    # Prosty i skuteczny model
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    for col in x_train.select_dtypes(include=['object']).columns:
+        x_train[col] = x_train[col].map({'yes': 1, 'no': 0}).fillna(0)
+
+    model = LinearRegression()
     model.fit(x_train, y_train)
 
-    # Zapisujemy model w dedykowanym folderze
     model_path = os.path.join(output_dir, "housing_model.joblib")
     joblib.dump(model, model_path)
-    print(f"Model został pomyślnie zapisany w: {model_path}")
-
+    print(f"Model pomyślnie wytrenowany i zapisany w: {model_path}")
 
 if __name__ == "__main__":
     train_and_save_model()
