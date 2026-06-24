@@ -5,14 +5,14 @@ import streamlit as st
 
 st.set_page_config(page_title="Wycena Nieruchomości", page_icon="🏠")
 
-st.title("🏠 Algorytm Wyceny Nieruchomości")
-st.write("Wprowadź parametry domu na podstawie danych rynkowych.")
+st.title("🏠 Wycena nieruchomości")
+st.write("Wprowadź parametry domu")
 
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Podstawowe parametry")
-    area = st.number_input("Powierzchnia (m²)", min_value=10.0, value=200.0)
+    area = st.number_input("Powierzchnia (m²)", min_value=10.0, value=100.0)
     bedrooms = st.number_input("Liczba sypialni", min_value=1, value=1)
     bathrooms = st.number_input("Liczba łazienek", min_value=1, value=1)
     stories = st.number_input("Liczba pięter", min_value=1, value=2)
