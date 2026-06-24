@@ -25,4 +25,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         export PYTHONPATH="${{ github.workspace }}"
-        pylint data/ model/ app/
+        pylint --fail-under=8.0 data/ model/ app/
