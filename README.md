@@ -68,8 +68,8 @@ Wpisz w terminalu (w głównym katalogu projektu) poniższą komendę:
 docker-compose up --build
 ```
 ### Dostęp do usług:
--Interfejs użytkownika (Frontend): http://localhost:8501
--Dokumentacja techniczna (Backend API): http://localhost:8000/docs
+* **Interfejs użytkownika (Frontend):** Pod adresem `http://localhost:8501`
+* **Dokumentacja techniczna (Backend API):** Pod adresem `http://localhost:8000/docs`
 
 ### Zatrzymanie środowiska:
 Aby wyłączyć aplikację i całkowicie wyczyścić zasoby kontenerów, użyj:
