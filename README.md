@@ -1,5 +1,9 @@
 # System Wyceny Nieruchomości (ML w Architekturze Mikroserwisów)
 
+## Autorzy projektu
+* **Wojciech Młynarski** – s28691
+
+---
 ## Opis Projektu
 Celem projektu jest stworzenie modularnej aplikacji opartej o silnik Machine Learning (Regresja Liniowa), która przewiduje ceny nieruchomości na podstawie parametrów takich jak metraż, liczba sypialni, stan umeblowania czy obecność klimatyzacji. Projekt wykorzystuje rzeczywisty zbiór danych rynkowych (Kaggle Housing Dataset), który został przetworzony, urealniony do warunków krajowych i zmigrowany do relacyjnej bazy danych SQLite.
 
@@ -123,6 +127,23 @@ Aby wyłączyć aplikację i całkowicie wyczyścić zasoby kontenerów, użyj:
 ```bash
 docker-compose down -v
 ```
+
+### Instrukcja korzystania z aplikacji (User Guide)
+
+Po pomyślnym uruchomieniu kontenerów i wejściu na adres `http://localhost:8501`, interfejs graficzny pozwala na intuicyjne prognozowanie cen:
+
+1. **Konfiguracja parametrów podstawowych (Lewy panel):**
+   - Wprowadź powierzchnię domu w metrach kwadratowych.
+   - Określ strukturę budynku, wybierając liczbę sypialni, łazienek oraz pięter.
+   - Wskaż liczbę miejsc parkingowych oraz wybierz stan umeblowania z listy rozwijanej (Brak, Częściowe lub Pełne).
+
+2. **Wybór udogodnień (Prawy panel):**
+   - Zaznacz odpowiednie opcje za pomocą checkboxów (np. czy dom posiada klimatyzację, piwniczą lub pokój gościnny).
+
+3. **Generowanie wyceny:**
+   - Kliknij szeroki przycisk **"Szacuj wartość rynkową"** na samym dole strony.
+   - Wynik predykcji oparty na algorytmie Machine Learning wyświetli się natychmiast w zielonej ramce, prezentując szacowaną wartość nieruchomości bezpośrednio w Polskich Złotych (PLN).
+
 
 ## Instrukcja Rozwoju Lokalnego (Poza Dockerem)
 
