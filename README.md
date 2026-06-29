@@ -5,14 +5,35 @@ Celem projektu jest stworzenie modularnej aplikacji opartej o silnik Machine Lea
 
 Aplikacja została zaprojektowana w architekturze mikroserwisowej, rozdzielającej backend (silnik predykcyjny API) od warstwy prezentacji (interfejs użytkownika). Całość została w pełni skonteneryzowana za pomocą Dockera, dzięki czemu system uruchamia się w dowolnym środowisku.
 
+---
+
+## Wymagania Systemowe
+
+### Wymagania sprzętowe:
+- Procesor: Wspierający wirtualizację (x86_64 lub ARM64, np. Apple Silicon).
+- Pamięć RAM: Minimum 4 GB wolnej pamięci operacyjnej.
+- Przestrzeń dyskowa: Około 2 GB na obrazy Docker oraz warstwy cache.
+
+### Wymagania programowe (Zależności globalne):
+- Docker Engine: Wersja 20.10.0 lub nowsza.
+- Docker Compose: Wersja 2.0.0 lub nowsza.
+- Python (tylko do rozwoju lokalnego poza Dockerem): Wersja 3.10.x.
+
+---
+
+
 ## Struktura Projektu
 Zgodnie z wymogami, logika działania została sztywno rozdzielona na niezależne warstwy (`data` | `model` | `app`):
 
 ```text
 SUML-PROJEKT/
 │
+├── .github/                # Konfiguracja potoków automatyzacji
+│   └── workflows/
+│       └── pylint.yml      # Potok GitHub Actions (CI) dla testów statycznych
+│  
 ├── data/                   # [WARSTWA DATA]
-│   └── data_processor.py   # Pobieranie danych z SQLite i podział na zbiory train/test
+│   └── data_processor.py   # Pobieranie danych z SQLite i podział na zbiory train test
 │
 ├── model/                  # [WARSTWA MODEL]
 │   ├── trainer.py          # Skrypt trenujący model Regresji Liniowej
@@ -37,6 +58,32 @@ SUML-PROJEKT/
 ├── requirements.txt        # Lista zależności
 └── README.md               # Dokumentacja projektu
 ```
+
+## Charakterystyka Zbioru Danych (Słownik Pojęć)
+
+Model predykcyjny wykorzystuje 12 cech wejściowych (zmiennych niezależnych) do prognozowania ceny końcowej nieruchomości rynkowej.
+
+### Zmienna docelowa (Target)
+
+* **price** (`float`): Cena końcowa nieruchomości wyrażona w Polskich Złotych (PLN).
+
+### Cechy wejściowe (Features)
+
+| Nazwa zmiennej | Typ danych | Opis i dopuszczalny zakres wartości |
+| :--- | :---: | :--- |
+| **area** | `float` | Powierzchnia użytkowa nieruchomości przeliczona na metry kwadratowe ($m^2$). |
+| **bedrooms** | `int` | Całkowita liczba sypialni w nieruchomości. |
+| **bathrooms** | `int` | Całkowita liczba łazienek w nieruchomości. |
+| **stories** | `int` | Liczba kondygnacji (pięter) budynku. |
+| **mainroad** | `int` | Położenie nieruchomości bezpośrednio przy głównej drodze (1 = Tak, 0 = Nie). |
+| **guestroom** | `int` | Obecność wydzielonego pokoju gościnnego (1 = Tak, 0 = Nie). |
+| **basement** | `int` | Obecność użytkowej piwnicy (1 = Tak, 0 = Nie). |
+| **hotwaterheating** | `int` | Obecność instalacji centralnego podgrzewania wody (1 = Tak, 0 = Nie). |
+| **airconditioning** | `int` | Obecność dedykowanego systemu klimatyzacji (1 = Tak, 0 = Nie). |
+| **parking** | `int` | Liczba dostępnych miejsc parkingowych na terenie posiadłości (zakres 0-3). |
+| **prefarea** | `int` | Lokalizacja nieruchomości w dzielnicy powszechnie uznawanej za preferowaną (1 = Tak, 0 = Nie). |
+| **furnishingstatus** | `int` | Standard umeblowania lokalu (0 = Brak wykończenia, 1 = Częściowe, 2 = Pełne umeblowanie). |
+
 
 ## Architektura i Przepływ Danych
 
@@ -76,3 +123,34 @@ Aby wyłączyć aplikację i całkowicie wyczyścić zasoby kontenerów, użyj:
 ```bash
 docker-compose down -v
 ```
+
+## Instrukcja Rozwoju Lokalnego (Poza Dockerem)
+
+W celu edycji kodu, debugowania lub ponownego uruchomienia procesu analizy danych (EDA) w notatniku, należy przygotować lokalne środowisko wirtualne.
+
+### 0. Tworzenie i aktywacja środowiska wirtualnego
+
+Najpierw utwórz środowisko deweloperskie w głównym katalogu projektu:
+
+```bash
+python -m venv venv
+# Windows (PowerShell):
+.\venv\Scripts\Activate.ps1
+# Linux / macOS:
+source venv/bin/activate
+```
+### 1. Instalacja zależności projektowych:
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+### 2. Uruchomienie notatnika Jupyter:
+```bash
+jupyter notebook notebooks/data_preparation.ipynb
+```
+
+## Jakość Kodu i Integracja Ciągła (CI)
+* Projekt posiada zaimplementowany potok automatyzacji GitHub Actions, który przy każdym wypchnięciu kodu (git push) weryfikuje poprawność składniową oraz zgodność ze standardami PEP8.
+* Narzędzie weryfikujące: Pylint
+* Konfiguracja potoku: .github/workflows/pylint.yml
+* Aktualny status statycznej analizy kodu: 10.00/10 (lub powyżej progu akceptowalności --fail-under=8.0)
